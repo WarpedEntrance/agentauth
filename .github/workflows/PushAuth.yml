@@ -13,6 +13,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
+    - name: Set up Docker
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y docker-compose
+
     - name: Load environment variables
       run: |
         echo "PG_PASS=$(grep PG_PASS .env | cut -d '=' -f2)" >> $GITHUB_ENV
