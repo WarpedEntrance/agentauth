@@ -8,26 +8,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
-    services:
-      postgresql:
-        image: postgres:12-alpine
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd "pg_isready -d ${{ env.PG_DB }} -U ${{ env.PG_USER }}"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-      redis:
-        image: redis:alpine
-        options: >-
-          --health-cmd "redis-cli ping"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 6379:6379
 
     steps:
     - name: Checkout code
@@ -35,9 +15,9 @@ jobs:
 
     - name: Load environment variables
       run: |
-        set -o allexport
-        source .env
-        set +o allexport
+        echo "PG_PASS=$(grep PG_PASS .env | cut -d '=' -f2)" >> $GITHUB_ENV
+        echo "PG_USER=$(grep PG_USER .env | cut -d '=' -f2)" >> $GITHUB_ENV
+        echo "PG_DB=$(grep PG_DB .env | cut -d '=' -f2)" >> $GITHUB_ENV
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
