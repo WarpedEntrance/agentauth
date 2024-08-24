@@ -61,7 +61,7 @@ jobs:
 
     - name: Run tests
       run: |
-        docker-compose exec server pytest  # Adjust with your test command
+        docker-compose exec -T server pytest  # Adjust with your test command
       env:
         PG_PASS: ${{ env.PG_PASS }}
         PG_USER: ${{ env.PG_USER }}
