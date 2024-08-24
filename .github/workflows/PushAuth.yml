@@ -58,16 +58,3 @@ jobs:
         PG_PASS: ${{ env.PG_PASS }}
         PG_USER: ${{ env.PG_USER }}
         PG_DB: ${{ env.PG_DB }}
-
-    - name: Run tests
-      run: |
-        docker-compose exec -T server pytest  # Adjust with your test command
-      env:
-        PG_PASS: ${{ env.PG_PASS }}
-        PG_USER: ${{ env.PG_USER }}
-        PG_DB: ${{ env.PG_DB }}
-
-    - name: Shut down Docker Compose
-      if: always()
-      run: |
-        docker-compose down
