@@ -12,14 +12,10 @@ jobs:
     services:
       postgresql:
         image: postgres:12-alpine
-        env:
-          POSTGRES_PASSWORD: ${{ secrets.PG_PASS }}
-          POSTGRES_USER: ${{ secrets.PG_USER }}
-          POSTGRES_DB: ${{ secrets.PG_DB }}
         ports:
           - 5432:5432
         options: >-
-          --health-cmd "pg_isready -d ${{ secrets.PG_DB }} -U ${{ secrets.PG_USER }}"
+          --health-cmd "pg_isready -d ${{ env.PG_DB }} -U ${{ env.PG_USER }}"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
@@ -65,14 +61,26 @@ jobs:
       run: |
         docker-compose build
         docker-compose push
+      env:
+        PG_PASS: ${{ env.PG_PASS }}
+        PG_USER: ${{ env.PG_USER }}
+        PG_DB: ${{ env.PG_DB }}
 
     - name: Start Docker Compose
       run: |
         docker-compose up -d
+      env:
+        PG_PASS: ${{ env.PG_PASS }}
+        PG_USER: ${{ env.PG_USER }}
+        PG_DB: ${{ env.PG_DB }}
 
     - name: Run tests
       run: |
         docker-compose exec server pytest  # Adjust with your test command
+      env:
+        PG_PASS: ${{ env.PG_PASS }}
+        PG_USER: ${{ env.PG_USER }}
+        PG_DB: ${{ env.PG_DB }}
 
     - name: Shut down Docker Compose
       if: always()
